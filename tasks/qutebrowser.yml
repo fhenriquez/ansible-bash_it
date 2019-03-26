@@ -1,0 +1,16 @@
+---
+- name: Create {{ user_home }}/config
+  file:
+    path: "{{ user_home }}/.qutebrowser"
+    state: directory
+    owner: "{{ user }}"
+    mode: 0744 
+  become: no
+
+- name: Copy qutebrowser into config folder.
+  copy:
+    src: "{{ dotfiles_repo_local_destination }}/qutebrowser_config.py"
+    dest: "{{ dotfiles_home }}/.qutebrowser/config.py"
+    owner: "{{ user }}"
+    mode: 0644
+  become: no

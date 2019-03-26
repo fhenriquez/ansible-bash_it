@@ -19,15 +19,15 @@
     version: "{{ version }}"
   become: "{{ user }}"
 
-- name: .bash_profile loads .bashrc for {{ user }}
-  blockinfile:
-    dest: "{{ user_home }}/.bash_profile"
-    create: yes
-    owner: "{{ user }}"
-    block: |
-      if [ -f ~/.bashrc ]; then
-        source ~/.bashrc
-      fi
+#- name: .bash_profile loads .bashrc for {{ user }}
+#  blockinfile:
+#    dest: "{{ user_home }}/.bash_profile"
+#    create: yes
+#    owner: "{{ user }}"
+#    block: |
+#      if [ -f ~/.bashrc ]; then
+#        source ~/.bashrc
+#      fi
 
 - name: change shell to bash for {{ user }}
   command: "chsh -s /bin/bash {{ user }}"
@@ -43,7 +43,7 @@
     line: "{{ item.line }}"
   with_items:
     - { regexp: '^export BASH_IT=', line: 'export BASH_IT="$HOME/.bash_it"' }
-    - { regexp: '^export BASH_IT_THEME=', line: 'export BASH_IT_THEME={{ theme }}' }
+    - { regexp: '^export BASH_IT_THEME=', line: "export BASH_IT_THEME={{ bashit_theme[0] }}" }
     - { regexp: '^source \$BASH_IT', line: 'source $BASH_IT/bash_it.sh' }
 
 - name: initialize bash_it directories for {{ user }}
@@ -62,8 +62,8 @@
     dest: "{{ user_home }}/.bash_it/plugins/enabled/{{ item }}.plugin.bash"
     state: link
     owner: "{{ user }}"
-  with_items: "{{ plugins }}"
-  when: plugins is defined
+  with_items: "{{ bashit_plugins }}"
+  when: bashit_plugins is defined
 
 - name: install bash_it aliases for {{ user }}
   file:
@@ -71,8 +71,8 @@
     dest: "{{ user_home }}/.bash_it/aliases/enabled/{{ item }}.aliases.bash"
     state: link
     owner: "{{ user }}"
-  with_items: "{{ aliases }}"
-  when: aliases is defined
+  with_items: "{{ bashit_aliases }}"
+  when: bashit_aliases is defined
 
 - name: install bash_it completions for {{ user }}
   file:
@@ -80,6 +80,8 @@
     dest: "{{ user_home }}/.bash_it/completion/enabled/{{ item }}.completion.bash"
     state: link
     owner: "{{ user }}"
-  with_items: "{{ completions }}"
-  when: completions is defined
+  with_items: "{{ bashit_completions }}"
+  when: bashit_completions is defined
 
+- name: configuring qutebrowser
+  import_tasks: qutebrowser.yml

@@ -15,3 +15,4 @@
   set_fact:
     user_home: "{{ linux_user_home.stdout }}"
     user_shell: "{{ linux_user_shell.stdout }}"
+    user_home_config: "{{ user_home }}/config"
