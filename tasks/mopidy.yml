@@ -1,0 +1,39 @@
+---
+- name: Create {{ user_home }}/config
+  file:
+    path: "{{ user_home }}/.conf/{{ item }}"
+    state: directory
+    owner: "{{ user }}"
+    mode: 0744 
+  become: no
+  with_items:
+    - mopidy
+    - mpd
+    - mpv
+    - mps-youtube
+    - ncmpcpp
+
+- name: Copy mopdiy into config folder.
+  copy:
+    src: "{{ dotfiles_repo_local_destination }}/mopidy.conf"
+    dest: "{{ dotfiles_home }}/.config/mopidy/mopidy.conf"
+    owner: "{{ user }}"
+    mode: 0644
+  become: no
+
+- name: Copy ncmpcpp into config folder.
+  copy:
+    src: "{{ dotfiles_repo_local_destination }}/ncmpcpp.config"
+    dest: "{{ dotfiles_home }}/.config/ncmpcpp/config"
+    owner: "{{ user }}"
+    mode: 0644
+  become: no
+
+- name: Copy ncmpcpp into config folder.
+  copy:
+    src: "{{ dotfiles_repo_local_destination }}/ncmpcpp.bindings"
+    dest: "{{ dotfiles_home }}/.config/ncmpcpp/bindings"
+    owner: "{{ user }}"
+    mode: 0644
+  become: no
+
